@@ -1,0 +1,111 @@
+import random
+import os
+
+# =========================
+# JOGO: PEGUE OS PATOS 🦆
+# =========================
+
+print("🦆 BEM-VINDO AO PEGUE OS PATOS! 🦆")
+
+nome = input("Digite seu nome: ")
+
+print(f"\n👋 {nome} entrou no jogo!")
+input("Pressione ENTER para começar...")
+
+# Tamanho do mapa
+LARGURA = 10
+ALTURA = 8
+
+# Jogador
+jogador_x = 0
+jogador_y = 0
+
+# Criar patos em posições aleatórias
+patos = []
+
+for i in range(5):
+    while True:
+        x = random.randint(0, LARGURA - 1)
+        y = random.randint(0, ALTURA - 1)
+
+        if (x, y) != (jogador_x, jogador_y) and (x, y) not in patos:
+            patos.append((x, y))
+            break
+
+capturados = 0
+
+
+def limpar_tela():
+    os.system("cls" if os.name == "nt" else "clear")
+
+
+def mostrar_mapa():
+    print(f"🧑 Jogador: {nome}")
+    print(f"🦆 Patos capturados: {capturados}/5\n")
+
+    for y in range(ALTURA):
+        for x in range(LARGURA):
+
+            if (x, y) == (jogador_x, jogador_y):
+                print("🧑", end="")
+
+            elif (x, y) in patos:
+                print("🦆", end="")
+
+            else:
+                print("⬜", end="")
+
+        print()
+
+
+while capturados < 5:
+
+    limpar_tela()
+    mostrar_mapa()
+
+    print("\nControles:")
+    print("W = cima")
+    print("S = baixo")
+    print("A = esquerda")
+    print("D = direita")
+
+    comando = input("\nMovimento: ").lower()
+
+    novo_x = jogador_x
+    novo_y = jogador_y
+
+    if comando == "w":
+        novo_y -= 1
+    elif comando == "s":
+        novo_y += 1
+    elif comando == "a":
+        novo_x -= 1
+    elif comando == "d":
+        novo_x += 1
+    else:
+        print("❌ Comando inválido!")
+        input("ENTER para continuar...")
+        continue
+
+    # Impedir sair do mapa
+    if 0 <= novo_x < LARGURA and 0 <= novo_y < ALTURA:
+        jogador_x = novo_x
+        jogador_y = novo_y
+
+    # Verificar se pegou um pato
+    if (jogador_x, jogador_y) in patos:
+        patos.remove((jogador_x, jogador_y))
+        capturados += 1
+
+        print("\n🦆💨 VOCÊ PEGOU UM PATO!")
+        input("ENTER para continuar...")
+
+
+# Vitória
+limpar_tela()
+
+print("🦆🏆 ======================== 🏆🦆")
+print(f"      PARABÉNS, {nome}!")
+print("       VOCÊ PEGOU TODOS!")
+print("🦆🏆 ======================== 🏆🦆")
+print(f"\nPatos capturados: {capturados}")
